@@ -1,5 +1,5 @@
 <template>
-  <div class="header-component"> header  </div>
+  <div class="header-component">element-generator  </div>
 </template>
  
 <script>
@@ -24,5 +24,9 @@ export default {
   height: @header-height;
   background: skyblue;
   color: white;
+  line-height: @header-height;
+  box-sizing: border-box;
+  padding-left: 20px;
+  font-size: 20px;
 }
 </style>

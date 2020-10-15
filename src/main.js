@@ -3,9 +3,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './style/base.less'
+import './style/global.less'
 import VueDraggableResizable from 'vue-draggable-resizable'
 // optionally import default styles
 import 'vue-draggable-resizable/dist/VueDraggableResizable.css'
+
 
 Vue.component('vue-draggable-resizable', VueDraggableResizable)
 

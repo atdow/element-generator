@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <Header />
+    <HeaderBar />
     <div class="main-content">
       <ComponentsPanel />
       <WorkPlace style="work-place" />
@@ -23,7 +23,7 @@
 </template>
  
 <script>
-import Header from "@/components/Header";
+import HeaderBar from "@/components/Header";
 import ComponentsPanel from "@/components/ComponentsPanel";
 import WorkPlace from "@/components/WorkPlace";
 import OptionsPanel from "@/components/OptionsPanel";
@@ -39,7 +39,7 @@ export default {
     };
   },
   components: {
-    Header,
+    HeaderBar,
     ComponentsPanel,
     WorkPlace,
     OptionsPanel,
