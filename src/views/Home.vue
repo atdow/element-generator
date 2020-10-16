@@ -25,7 +25,7 @@
 <script>
 import HeaderBar from "@/components/Header";
 import ComponentsPanel from "@/components/ComponentsPanel";
-import WorkPlace from "@/components/WorkPlace";
+import WorkPlace from "@/components/WorkPlace/index.js";
 import OptionsPanel from "@/components/OptionsPanel";
 export default {
   name: "home",

@@ -38,6 +38,7 @@ export default {
       workPalceElement: null,
       timer: null,
       mouseAxis: {},
+      materialMoveDebounce: 3,
     };
   },
   components: {},
@@ -63,23 +64,31 @@ export default {
           let moveElementWidth = that.moveElement.getBoundingClientRect().width;
           let moveElementHeight = that.moveElement.getBoundingClientRect()
             .height;
-
-          that.moveElement.style.left =
-            event.clientX - moveElementWidth / 2 + "px";
-          that.moveElement.style.top =
+          // transform: translate(112px, 131px)
+          let x = event.clientX - moveElementWidth / 2 + "px";
+          let y =
             event.clientY -
             that.moveElement.getBoundingClientRect().height / 2 +
             "px";
-        }, 5);
+          that.moveElement.style.transform = `translate(${x}, ${y})`;
+        }, that.materialMoveDebounce);
       }
     };
     window.onmouseup = function () {
-      console.log("onmouseup");
+      // console.log("onmouseup");
       that.isComponentMousedown = false;
       // 鼠标左键抬起时判断是否在工作区内
       if (that.moveElement) {
-        !judgeInScale(that.mouseAxis, that.workPalceElementAxis) &&
+        if (judgeInScale(that.mouseAxis, that.workPalceElementAxis)) {
+          that.$event.emit("place_components", "input");
+          // that.mainContent.removeChild(that.moveElement);
+          //  console.log(777);
+        } else {
+          //  that.mainContent.removeChild(that.moveElement);
+        }
+        try {
           that.mainContent.removeChild(that.moveElement);
+        } catch (error) {}
       }
     };
 
