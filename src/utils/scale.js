@@ -4,7 +4,7 @@
  * @param { Array<Object> } scaleAxis [{x: 250, y: 50}, {x: 765, y: 50}, {x: 250, y: 723},{x: 765, y: 723]
  * @returns { Boolean }
  */
-export const judgeInScale = function(pointAxis, scaleAxis) {
+export const judgePointInScale = function(pointAxis, scaleAxis) {
     if (
       pointAxis.x >= scaleAxis[0].x &&
       pointAxis.x <= scaleAxis[1].x &&
@@ -40,4 +40,12 @@ export const getElementAxis = function(element){
       },
     ]; 
     return elementAxis
+}
+
+export const getElementWidthAndHeight = function(element){
+  let elementInfo = element.getBoundingClientRect();
+  return{
+    width:elementInfo.width,
+    height:elementInfo.height
+  }
 }

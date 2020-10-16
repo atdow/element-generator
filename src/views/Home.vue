@@ -3,7 +3,7 @@
     <HeaderBar />
     <div class="main-content">
       <ComponentsPanel />
-      <WorkPlace style="work-place" />
+      <WorkPlace class="work-place" />
       <OptionsPanel />
     </div>
     <el-button type="primary" v-if="0">主要按钮</el-button>

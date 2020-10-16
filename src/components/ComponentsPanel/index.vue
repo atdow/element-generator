@@ -1,18 +1,5 @@
 <template>
   <div class="components-panel">
-    <!-- <vue-draggable-resizable
-      :w="100"
-      :h="100"
-      @dragging="onDrag"
-      @resizing="onResize"
-      :parent="false"
-    >
-      <el-input
-        v-model="input"
-        placeholder="请输入内容"
-        class="component-materail"
-      ></el-input>
-    </vue-draggable-resizable> -->
     <el-input
       v-model="input"
       placeholder="请输入内容"
@@ -24,7 +11,11 @@
 </template>
  
 <script>
-import { getElementAxis, judgeInScale } from "@/utils/scale";
+import {
+  getElementAxis,
+  getElementWidthAndHeight,
+  judgePointInScale,
+} from "@/utils/scale";
 export default {
   name: "components-panel",
   props: {},
@@ -39,6 +30,7 @@ export default {
       timer: null,
       mouseAxis: {},
       materialMoveDebounce: 3,
+      componentsIndex: 0, // 添加组件的顺序索引
     };
   },
   components: {},
@@ -52,7 +44,7 @@ export default {
       document.querySelector(".work-place")
     );
     // this.getWorkPalceAxis(); // 获取工作区坐标
-    console.log("workPalceElementAxis:", this.workPalceElementAxis);
+    // console.log("workPalceElementAxis:", this.workPalceElementAxis);
     window.onmousemove = function (event) {
       that.mouseAxis = { x: event.clientX, y: event.clientY };
       // 拖拽物料组件时实现拖拽功能
@@ -60,35 +52,42 @@ export default {
         // 输入防抖
         clearTimeout(that.timer);
         that.timer = setTimeout(function () {
-          // let mainContentTopStart = mainContent;
-          let moveElementWidth = that.moveElement.getBoundingClientRect().width;
-          let moveElementHeight = that.moveElement.getBoundingClientRect()
-            .height;
-          // transform: translate(112px, 131px)
-          let x = event.clientX - moveElementWidth / 2 + "px";
-          let y =
-            event.clientY -
-            that.moveElement.getBoundingClientRect().height / 2 +
-            "px";
-          that.moveElement.style.transform = `translate(${x}, ${y})`;
+          that.materialComponentMove(); // 物料跟随鼠标移动
+          if (judgePointInScale(that.mouseAxis, that.workPalceElementAxis)) {
+            // console.log(
+            //   "that.moveElement",
+            //   that.moveElement.getBoundingClientRect()
+            // );
+            that.$event.emit("materialComponents_moveIn_workPlace", true);
+          } else {
+            that.$event.emit("materialComponents_moveIn_workPlace", false);
+          }
         }, that.materialMoveDebounce);
       }
     };
     window.onmouseup = function () {
       // console.log("onmouseup");
       that.isComponentMousedown = false;
-      // 鼠标左键抬起时判断是否在工作区内
       if (that.moveElement) {
-        if (judgeInScale(that.mouseAxis, that.workPalceElementAxis)) {
-          that.$event.emit("place_components", "input");
-          // that.mainContent.removeChild(that.moveElement);
-          //  console.log(777);
-        } else {
-          //  that.mainContent.removeChild(that.moveElement);
+        // 鼠标左键抬起时判断是否在工作区内
+        if (judgePointInScale(that.mouseAxis, that.workPalceElementAxis)) {
+          let moveElementWidthAndWidth = getElementWidthAndHeight(
+            that.moveElement
+          );
+          that.$event.emit("place_components", {
+            index: that.componentsIndex++,
+            type: "input",
+            target: that.moveElement,
+            width: moveElementWidthAndWidth.width,
+            height: moveElementWidthAndWidth.height,
+            axis: getElementAxis(that.moveElement),
+          });
         }
+        // 清除物料元素
         try {
           that.mainContent.removeChild(that.moveElement);
         } catch (error) {}
+        that.moveElement = null;
       }
     };
 
@@ -129,6 +128,18 @@ export default {
     },
     mousemove() {
       //  console.log("mousemove");
+    },
+    // 物料跟随鼠标移动
+    materialComponentMove() {
+      let moveElementWidth = this.moveElement.getBoundingClientRect().width;
+      let moveElementHeight = this.moveElement.getBoundingClientRect().height;
+      // transform: translate(112px, 131px)
+      let x = this.mouseAxis.x - moveElementWidth / 2 + "px";
+      let y =
+        this.mouseAxis.y -
+        this.moveElement.getBoundingClientRect().height / 2 +
+        "px";
+      this.moveElement.style.transform = `translate(${x}, ${y})`;
     },
   },
 };
