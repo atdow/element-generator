@@ -33,8 +33,9 @@ export default {
     },
     methods: {
         receiveComponent(info) {
-            console.log(info)  
+           // console.log(info)  
             this.materialComponents_moveIn_workPlace = false
+            info.axis = this.rectityComponentAxis(info)
             this.components_array.push(info)
             this.createElements(this.components_array)
         },
@@ -75,6 +76,217 @@ export default {
                 }
             })
             this.componentsElement = [...element]
+        },
+        // 调整组件的坐标
+        rectityComponentAxis(componentInfo){
+            // console.log(componentInfo)
+            this.workPlaceAxis = getElementAxis(document.querySelector('.work-place'))
+            
+            let componentLeft = componentInfo.axis[0].x;
+            let componentRight = componentInfo.axis[1].x;
+            let componentTop = componentInfo.axis[0].y;
+            let componentBottom = componentInfo.axis[3].y;
+
+            let workPlaceLeft = this.workPlaceAxis[0].x;
+            let workPlaceRight = this.workPlaceAxis[1].x;
+            let workPlaceTop = this.workPlaceAxis[0].y;
+            let workPlaceBottom = this.workPlaceAxis[3].y;
+
+            let newAxis = [...componentInfo.axis]
+            // I
+            if(componentLeft < workPlaceLeft && componentRight > workPlaceLeft){
+                // console.log("I")
+                //  console.log(componentBottom,workPlaceBottom)
+                if(componentTop < workPlaceTop && componentBottom > workPlaceTop){
+                   // console.log(1)
+                    newAxis = [
+                        { 
+                            x: this.workPlaceAxis[0].x, 
+                            y: this.workPlaceAxis[0].y 
+                        },
+                        {
+                            x: this.workPlaceAxis[0].x + componentInfo.width,
+                            y: this.workPlaceAxis[0].y ,
+                        },
+                        {
+                            x: this.workPlaceAxis[0].x,
+                            y: this.workPlaceAxis[0].y + componentInfo.height,
+                        },
+                        {
+                            x: this.workPlaceAxis[0].x + componentInfo.width,
+                            y: this.workPlaceAxis[0].y + componentInfo.height,
+                        },
+                    ]
+                    return newAxis
+                }
+                if(componentTop > workPlaceTop && componentBottom < workPlaceBottom){
+                    //console.log(2)
+                    newAxis = [
+                        { 
+                            x: this.workPlaceAxis[0].x, 
+                            y: componentInfo.axis[0].y 
+                        },
+                        {
+                            x: this.workPlaceAxis[0].x + componentInfo.width,
+                            y: componentInfo.axis[1].y ,
+                        },
+                        {
+                            x: this.workPlaceAxis[0].x,
+                            y: componentInfo.axis[2].y ,
+                        },
+                        {
+                            x: this.workPlaceAxis[0].x + componentInfo.width,
+                            y: componentInfo.axis[3].y,
+                        },
+                    ]
+                    return newAxis
+                }
+                if(componentTop < componentBottom && componentBottom > workPlaceBottom){
+                    //console.log(3)
+                    newAxis = [
+                        { 
+                            x: this.workPlaceAxis[2].x, 
+                            y: this.workPlaceAxis[2].y - componentInfo.height
+                        },
+                        {
+                            x: this.workPlaceAxis[2].x + componentInfo.width,
+                            y: this.workPlaceAxis[2].y - componentInfo.height ,
+                        },
+                        {
+                            x: this.workPlaceAxis[2].x,
+                            y: this.workPlaceAxis[2].y,
+                        },
+                        {
+                            x: this.workPlaceAxis[2].x + componentInfo.width,
+                            y: this.workPlaceAxis[2].y,
+                        },
+                    ]
+                    return newAxis
+                }
+            }
+            // II
+            if(componentLeft > workPlaceLeft && componentRight < workPlaceRight){
+                // console.log("II")
+                if(componentTop < workPlaceTop && componentBottom > workPlaceTop){
+                    console.log(4)
+                    newAxis = [
+                        { 
+                            x: componentInfo.axis[0].x, 
+                            y: this.workPlaceAxis[0].y 
+                        },
+                        {
+                            x: componentInfo.axis[1].x + componentInfo.width,
+                            y: this.workPlaceAxis[0].y ,
+                        },
+                        {
+                            x: componentInfo.axis[1].x,
+                            y: this.workPlaceAxis[0].y + componentInfo.height,
+                        },
+                        {
+                            x: componentInfo.axis[1].x + componentInfo.width,
+                            y: this.workPlaceAxis[0].y + componentInfo.height,
+                        },
+                    ]
+                    return newAxis
+                }
+                if(componentTop > workPlaceTop && componentBottom < workPlaceBottom){
+                    //console.log(5)
+                    return newAxis
+                }
+                if(componentTop < componentBottom && componentBottom > workPlaceBottom){
+                    console.log(6)
+                    newAxis = [
+                        { 
+                            x: componentInfo.axis[0].x, 
+                            y: this.workPlaceAxis[2].y - componentInfo.height,
+                        },
+                        {
+                            x: componentInfo.axis[1].x + componentInfo.width,
+                            y: this.workPlaceAxis[2].y - componentInfo.height,
+                        },
+                        {
+                            x: componentInfo.axis[1].x,
+                            y: this.workPlaceAxis[2].y,
+                        },
+                        {
+                            x: componentInfo.axis[1].x + componentInfo.width,
+                            y: this.workPlaceAxis[2].y,
+                        },
+                    ]
+                    return newAxis
+                }
+            }
+            // III
+            if(componentLeft > workPlaceLeft && componentRight > workPlaceRight){
+               // console.log("III")
+                if(componentTop < workPlaceTop && componentBottom > workPlaceTop){
+                    //console.log(7)
+                    newAxis = [
+                        { 
+                            x: this.workPlaceAxis[1].x - componentInfo.width, 
+                            y: this.workPlaceAxis[1].y,
+                        },
+                        {
+                            x: componentInfo.axis[1].x,
+                            y: this.workPlaceAxis[1].y,
+                        },
+                        {
+                            x: this.workPlaceAxis[1].x - componentInfo.width,
+                            y: this.workPlaceAxis[1].y + componentInfo.height,
+                        },
+                        {
+                            x: componentInfo.axis[1].x,
+                            y: this.workPlaceAxis[1].y + componentInfo.height,
+                        },
+                    ]
+                    return newAxis
+                }
+                if(componentTop > workPlaceTop && componentBottom < workPlaceBottom){
+                    //console.log(8)
+                    newAxis = [
+                        { 
+                            x: this.workPlaceAxis[1].x - componentInfo.width, 
+                            y: componentInfo.axis[0].y,
+                        },
+                        {
+                            x: componentInfo.axis[1].x,
+                            y: componentInfo.axis[1].y,
+                        },
+                        {
+                            x: this.workPlaceAxis[1].x - componentInfo.width,
+                            y: componentInfo.axis[2].y,
+                        },
+                        {
+                            x: componentInfo.axis[1].x,
+                            y: componentInfo.axis[3].y,
+                        },
+                    ]
+                    return newAxis
+                }
+                if(componentTop < componentBottom && componentBottom > workPlaceBottom){
+                    //console.log(9)
+                    newAxis = [
+                        { 
+                            x: this.workPlaceAxis[1].x - componentInfo.width, 
+                            y: this.workPlaceAxis[3].y - componentInfo.height,
+                        },
+                        {
+                            x: componentInfo.axis[1].x,
+                            y: this.workPlaceAxis[3].y - componentInfo.height,
+                        },
+                        {
+                            x: this.workPlaceAxis[1].x - componentInfo.width,
+                            y: this.workPlaceAxis[3].y,
+                        },
+                        {
+                            x: componentInfo.axis[1].x,
+                            y: this.workPlaceAxis[3].y,
+                        },
+                    ]
+                    return newAxis
+                }
+            }
+            return componentInfo.axis
         }
     },
 
